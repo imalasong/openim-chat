@@ -30,7 +30,7 @@ import (
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	configFile, rpcPort, showVersion, err := config.FlagParse()
+	configFile, _, showVersion, err := config.FlagParse()
 	if err != nil {
 		util.ExitWithError(err)
 	}
@@ -51,7 +51,7 @@ func main() {
 		util.ExitWithError(err)
 	}
 	if config.Config.Envs.Discovery == "k8s" {
-		rpcPort = 80
+		//rpcPort = 80
 	}
 	if err != nil {
 		util.ExitWithError(err)
@@ -59,7 +59,7 @@ func main() {
 	if err := log.InitFromConfig("chat.log", "chat-rpc", *config.Config.Log.RemainLogLevel, *config.Config.Log.IsStdout, *config.Config.Log.IsJson, *config.Config.Log.StorageLocation, *config.Config.Log.RemainRotationCount, *config.Config.Log.RotationTime); err != nil {
 		util.ExitWithError(err)
 	}
-	err = chatrpcstart.Start(rpcPort, config.Config.RpcRegisterName.OpenImChatName, 0, chat.Start)
+	err = chatrpcstart.Start(config.Config.RpcPort.OpenImChatPort[0], config.Config.RpcRegisterName.OpenImChatName, 0, chat.Start)
 	if err != nil {
 		util.ExitWithError(err)
 	}

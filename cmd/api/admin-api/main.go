@@ -48,7 +48,7 @@ import (
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	configFile, ginPort, showVersion, err := config.FlagParse()
+	configFile, _, showVersion, err := config.FlagParse()
 	if err != nil {
 		util.ExitWithError(err)
 	}
@@ -75,7 +75,7 @@ func main() {
 		util.ExitWithError(err)
 	}
 	if config.Config.Envs.Discovery == "k8s" {
-		ginPort = 80
+		//ginPort = 80
 	}
 	var zk discoveryregistry.SvcDiscoveryRegistry
 	zk, err = discovery_register.NewDiscoveryRegister(config.Config.Envs.Discovery)
@@ -93,7 +93,7 @@ func main() {
 	engine.Use(mw.CorsHandler(), mw.GinParseOperationID(), mw2.GinLog())
 	api.NewAdminRoute(engine, zk)
 
-	address := net.JoinHostPort(config.Config.AdminApi.ListenIP, strconv.Itoa(ginPort))
+	address := net.JoinHostPort(config.Config.AdminApi.ListenIP, strconv.Itoa(config.Config.AdminApi.GinPort[0]))
 
 	server := http.Server{Addr: address, Handler: engine}
 
