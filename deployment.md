@@ -1,0 +1,1 @@
+-config_folder_path ./config/config.yaml
